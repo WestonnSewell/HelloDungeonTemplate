@@ -34,6 +34,8 @@ namespace HelloDungeon
         Character JohnCena;
         Character LucyJill;
         Character Player;
+        int CurrentEnemyIndex = 0;
+        Character[] Enemies;
         Weapon Sword;
         public string GetInput(string prompt , string choice1 , string choice2)
         {
@@ -95,7 +97,7 @@ namespace HelloDungeon
             return defender.Health - totalDamage;
         }
 
-        void Fight(ref Character monster1, ref Character monster2)
+        void Fight(ref Character monster2)
         {
 
 
@@ -114,21 +116,21 @@ namespace HelloDungeon
                 return;
             }
 
-            PrintStats(monster1);
+            PrintStats(monster2);
             PrintStats(monster2);
 
-            Console.WriteLine(monster1.Name + " punches " + monster2.Name + "!");
-            monster2.Health = Attack(monster1, monster2);
+            Console.WriteLine(monster2.Name + " punches " + monster2.Name + "!");
+            monster2.Health = Attack(monster2, monster2);
             Console.ReadKey(true);
 
-            PrintStats(monster1);
+            PrintStats(monster2);
             PrintStats(monster2);
 
-            Console.WriteLine(monster2.Name + " punches " + monster1.Name + "!");
-            monster1.Health = Attack(monster2, monster1);
+            Console.WriteLine(monster2.Name + " punches " + monster2.Name + "!");
+            monster2.Health = Attack(monster2, monster2);
             Console.ReadKey(true);
 
-            PrintStats(monster1);
+            PrintStats(monster2);
             PrintStats(monster2);
         }
 
@@ -140,23 +142,51 @@ namespace HelloDungeon
         }
         void BattleScene()
         {
-
-            Fight(ref JoePable, ref LucyJill);
+            Fight(ref Enemies[CurrentEnemyIndex]);
 
             Console.Clear();
 
-            if (JoePable.Health > 0 && LucyJill.Health > 0)
+            if (Player.Health <= 0 || Enemies[CurrentEnemyIndex].Health <= 0)
             {
-                currentScene = 3;
+                currentScene = 2;
             }
         }
 
         void WinResultsScene()
         {
 
-            if (JoePable.Health > 0 && LucyJill.Health > 0)
+            if (Player.Health > 0 && Enemies[CurrentEnemyIndex].Health > 0)
             {
                 Console.WriteLine("The winner is: " + JoePable.Name);
+                currentScene = 1;
+                CurrentEnemyIndex++;
+
+                if (CurrentEnemyIndex >= Enemies.Length) ;
+                {
+                    gameOver = true;
+                }
+            }
+            else if (Enemies[CurrentEnemyIndex].Health > 0 && Player.Health <= 0)
+            {
+                Console.WriteLine("The winner is: " + Enemies[CurrentEnemyIndex].Name);
+                currentScene = 3;
+            }
+            Console.ReadKey(true);
+            Console.Clear();
+        }
+
+        void EndGameScene()
+        {
+            string playerChoice = GetInput("You died. Play again?" , "1 for yes" , " 2 for no.");
+
+            if (playerChoice == "1")
+            {
+                currentScene = 0;
+            }
+
+            else if (playerChoice == "2")
+            {
+                gameOver = true;
             }
         }
         void Start()
@@ -190,6 +220,8 @@ namespace HelloDungeon
             LucyJill.Defense = .8f;
             LucyJill.Stamina = 0f;
             LucyJill.weapon = Sword;
+            //                               0         1         2
+            Enemies = new Character[3] { JoePable, JohnCena, LucyJill };
         }
 
 
@@ -206,7 +238,7 @@ namespace HelloDungeon
             }
             else if (currentScene == 3)
             {
-                WinResultsScene();
+                EndGameScene();
             }
         }
         public void End()
@@ -214,14 +246,19 @@ namespace HelloDungeon
             Console.WriteLine("Thanks for playing!");
         }
 
+        public void PrintSum(int[]Numberz)
+        {
+            int biggestNumber = Numberz[0];
+            for (int i = 0; i < Numberz.Length; i++)
+            {
+                biggestNumber += Numberz[i];
+            }
+            Console.WriteLine(biggestNumber);
+        }
+        
 
         public void Run()
         {
-            // make a new scene for character selection. Display all options for charactars that have been made.
-            // when selected, display the player's current status.
-            // in battle scene, give player the ability to fight another character.
-            // give the choice to attack or another extra mechanic like defense or running away.
-
             //start - called before first loop, used to initialize variables at the beginning of game.
             //update - called every time game loops, used for updating game logic
             //end - called after main game loop exits
