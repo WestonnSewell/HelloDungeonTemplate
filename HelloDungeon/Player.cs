@@ -19,7 +19,33 @@ namespace HelloDungeon
 
         public string GetInput(string prompt, string option1, string option2, string option3)
         {
+            _playerChoice = "";
 
+            Console.WriteLine(prompt);
+            Console.WriteLine("1." + option1);
+            Console.WriteLine("2." + option2);
+            Console.WriteLine("3." + option3);
+            Console.WriteLine(">");
+
+            _playerChoice = Console.ReadLine();
+
+            return _playerChoice;
+        }
+
+        public string GetInput(string prompt, string option1, string option2, string option3, string option4)
+        {
+            _playerChoice = "";
+
+            Console.WriteLine(prompt);
+            Console.WriteLine("1." + option1);
+            Console.WriteLine("2." + option2);
+            Console.WriteLine("3." + option3);
+            Console.WriteLine("3." + option4);
+            Console.WriteLine(">");
+
+            _playerChoice = Console.ReadLine();
+
+            return _playerChoice;
         }
     }
 }

@@ -17,6 +17,7 @@ namespace HelloDungeon
         private float _playerChoice;
         private Weapon _weapon;
         internal Weapon Weapon;
+        private int _lives;
 
         public Character(string name, float health, float damage, Weapon weapon)
         {
